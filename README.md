@@ -1,84 +1,65 @@
-# Module Frontend Scaffolder
+# Leafwrap Role Sanctions
 
-Module scaffold to organize folder structure
+Role sanction is a succinct and flexible way to add Role-based Permissions to Laravel
 
 ## Installation
 
-Use the package manager composer to install leafwrap/module-scaffolder.
-
-### Step 1:
+Use the package manager composer to install leafwrap/role-sanctions.
 
 ```bash
-composer require leafwrap/module-scaffolder
+composer require leafwrap/role-sanctions
 ```
 
-After installing package follow this steps:
-
-### Step 2:
-
-Copy this code to config/views.php
+You can publish the config file with:
 
 ```bash
-'paths' => [
-    resource_path('views'),
-    base_path('modules')
-],
-```
-
-### Step 3:
-
-Run this command
-
-```bash
-php artisan module:scaffold
-```
-
-### Step 4:
-
-Copy this code to RouteServiceProvider.php
-
-```bash
-public function boot()
-{
-    $this->configureRateLimiting();
-
-    $this->routes(function () {
-        Route::middleware('api')
-            ->prefix('api')
-            ->group(base_path('routes/api.php'));
-
-        Route::middleware('web')
-            ->group(base_path('routes/web.php'));
-
-        Route::middleware('web')
-            ->group(base_path('modules/web.php'));
-    });
-}
+php artisan vendor:publish --tag=role-sanctions
 ```
 
 ## Usage
 
-Use this command to make module
+### Step 1
+
+Add all your modules in config/role-sanctions.php
 
 ```bash
-php artisan module:make
+'modules' => [
+    ...modules
+],
 ```
 
-Module web routes use inside modules/web.php
+### Step 2
+
+After adding all modules demonstrate all gates in AuthServiceProviders
 
 ```bash
-Route::get('{route}', function(){
-    return view('{moduleName}.html.index');
-});
+if(auth()->check() && auth()->user->role){
+    RoleSanction::demonstrate(auth()->user->role);
+}
 ```
 
-If module have js & css then append that file to vite.config.js
+### Step 3
+
+Then certify your role ability in your controller methods
 
 ```bash
-files = [
-    'modules/{moduleName}/css/{moduleName}.css',
-    'modules/{moduleName}/js/{moduleName}.js',
+use Leafwrap\RoleSanctions\Facades\RoleSanction;
 
-    ...,
-]
+public function index()
+{
+    try {
+        # if use api
+        $certify = RoleSanction::certify('{module}-{action} || {permission}');
+        if(!$certify['access']){
+            return response()->json(['message' => $certify['message']], $certify['code']);
+        }
+
+        # if use general purpose
+        RoleSanction::certify('{module}-{action} || {permission}');
+
+        ... your code
+    } catch (Exception $e) {
+        return $e;
+    }
+}
 ```

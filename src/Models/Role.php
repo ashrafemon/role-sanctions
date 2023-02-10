@@ -16,11 +16,11 @@ class Role extends Model
         'description',
         'permissions',
         'grant_permission',
-        'status'
+        'status',
     ];
 
     protected $casts = [
-        'permissions' => 'array'
+        'permissions' => 'array',
     ];
 
     public function setNameAttribute($value)

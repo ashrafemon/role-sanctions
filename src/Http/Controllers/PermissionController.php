@@ -4,10 +4,7 @@ namespace Leafwrap\RoleSanctions\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Exception;
-use Illuminate\Support\Str;
 use Leafwrap\RoleSanctions\Facades\RoleSanction;
-use Leafwrap\RoleSanctions\Http\Requests\RoleRequest;
-use Leafwrap\RoleSanctions\Models\Role;
 use Leafwrap\RoleSanctions\Traits\Helper;
 
 class PermissionController extends Controller
@@ -16,10 +13,10 @@ class PermissionController extends Controller
 
     public function index()
     {
-        try{
+        try {
             $permissions = RoleSanction::getModulePermissions();
             return $this->entityResponse($permissions);
-        }catch (Exception $e){
+        } catch (Exception $e) {
             return $this->serverError($e);
         }
     }

@@ -29,11 +29,11 @@ class RoleRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'sometimes|required',
-            'description' => 'sometimes',
+            'name'             => 'sometimes|required',
+            'description'      => 'sometimes',
             'grant_permission' => 'sometimes|required|boolean',
-            'permissions' => 'sometimes|required_if:grant_permission,=,false|array',
-            'status' => 'sometimes|'. Rule::in(['active', 'inactive'])
+            'permissions'      => 'sometimes|required_if:grant_permission,=,false|array',
+            'status'           => 'sometimes|' . Rule::in(['active', 'inactive']),
         ];
     }
     protected function failedValidation(Validator $validator)

@@ -15,12 +15,19 @@ class RoleSanction
         if (!Gate::inspect($permission)->allowed()) {
             if (request()->header('accept') === 'application/json') {
                 return [
+                    'access'  => false,
                     'message' => $message ?: 'Permission denied',
                     'code'    => 403,
                 ];
             } else {
                 abort(403, $message ?: 'Permission denied');
             }
+        } else {
+            return [
+                'access'  => true,
+                'message' => 'You have ability to access',
+                'code'    => 200,
+            ];
         }
     }
 
