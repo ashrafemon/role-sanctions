@@ -33,19 +33,17 @@ class RoleSanction
 
     public function demonstrate($role = null): void
     {
-        if (auth()->check() && $role) {
-            $rolePermissions = $role['permissions'] ?? [];
-            foreach ($this->getPermissions() as $permission) {
-                Gate::define($permission, function () use ($role, $rolePermissions, $permission) {
-                    if ($role['grant_permission']) {
+        $rolePermissions = $role->permissions ?? [];
+        foreach ($this->getPermissions() as $permission) {
+            Gate::define($permission, function () use ($role, $rolePermissions, $permission) {
+                if ($role->grant_permission) {
+                    return true;
+                } else {
+                    if (in_array($permission, $rolePermissions)) {
                         return true;
-                    } else {
-                        if (in_array($permission, $rolePermissions)) {
-                            return true;
-                        }
                     }
-                });
-            }
+                }
+            });
         }
     }
 

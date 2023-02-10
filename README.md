@@ -33,8 +33,8 @@ Add all your modules in config/role-sanctions.php
 After adding all modules demonstrate all gates in AuthServiceProviders
 
 ```bash
-if(auth()->check() && auth()->user->role){
-    RoleSanction::demonstrate(auth()->user->role);
+if(auth()->check() && auth()->user()->role){
+    RoleSanction::demonstrate(auth()->user()->role);
 }
 ```
 
