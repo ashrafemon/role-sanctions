@@ -14,8 +14,13 @@
       "email": "ashraf.emon143@gmail.com"
     }
   ],
-  "minimum-stability": "stable",
+  "minimum-stability": "dev",
   "prefer-stable": true,
+  "config": {
+    "sort-packages": true,
+    "preferred-install": "dist",
+    "optimize-autoloader": true
+  },
   "require": {},
   "extra": {
     "laravel": {
