@@ -10,25 +10,9 @@ class RoleSanction
 {
     use Helper;
 
-    public function certify($permission, $message = null)
+    public function certify($permission)
     {
-        if (!Gate::inspect($permission)->allowed()) {
-            if (request()->header('accept') === 'application/json') {
-                return [
-                    'access'  => false,
-                    'message' => $message ?: 'Permission denied',
-                    'code'    => 403,
-                ];
-            } else {
-                abort(403, $message ?: 'Permission denied');
-            }
-        } else {
-            return [
-                'access'  => true,
-                'message' => 'You have ability to access',
-                'code'    => 200,
-            ];
-        }
+        return Gate::inspect($permission)->allowed() ? true : false;
     }
 
     public function demonstrate($role = null): void
