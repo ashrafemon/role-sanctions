@@ -49,13 +49,16 @@ public function index()
 {
     try {
         # if use api
-        $certify = RoleSanction::certify('{module}-{action} || {permission}');
-        if(!$certify['access']){
-            return response()->json(['message' => $certify['message']], $certify['code']);
+        $certify = RoleSanction::certify('{module}-{action}');
+        # e.g. $certify = RoleSanction::certify('user-read');
+
+        if(!$certify){
+            return response()->json(['message' => 'Unauthorized'], 403);
         }
 
         # if use general purpose
-        RoleSanction::certify('{module}-{action} || {permission}');
+        RoleSanction::certify('{module}-{action}');
+        # e.g. $certify = RoleSanction::certify('user-read');
 
         ... your code
     } catch (Exception $e) {
