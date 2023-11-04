@@ -15,10 +15,31 @@ class RoleController extends Controller
     public function index()
     {
         try {
-            $offset = request()->input('offset') ?? 10;
-            $fields = ['id', 'name', 'grant_permission', 'status'];
-            $roles  = $this->paginate(Role::query()->select($fields)->paginate($offset)->toArray());
-            return $this->entityResponse($roles);
+            $offset    = request()->input('offset') ?? 10;
+            $fields    = ['id', 'name', 'grant_permission', 'status'];
+            $condition = [];
+
+            $query = Role::query();
+
+            if (request()->has('status') && request()->input('status')) {
+                $condition['status'] = request()->input('status');
+            }
+
+            if (request()->has('grant_permission') && request()->input('grant_permission')) {
+                $condition['grant_permission'] = request()->input('grant_permission');
+            }
+
+            if (request()->has('search') && request()->input('search')) {
+                $query = $query->where('name', 'like', '%' . request()->input('search') . '%');
+            }
+
+            if (request()->has('get_all') && (int) request()->input('get_all') === 1) {
+                $query = $query->select($fields)->where($condition)->get();
+            } else {
+                $query = $this->paginate($query->select($fields)->where($condition)->paginate($offset)->toArray());
+            }
+
+            return $this->entityResponse($query);
         } catch (Exception $e) {
             return $this->serverError($e);
         }
@@ -51,7 +72,7 @@ class RoleController extends Controller
     public function update(RoleRequest $request, $id)
     {
         try {
-            if (!$role = Role::query()->select(['id'])->where(['id' => $id])->first()) {
+            if (!$role = Role::query()->where(['id' => $id])->first()) {
                 return $this->messageResponse();
             }
             $role->update($request->validated());
